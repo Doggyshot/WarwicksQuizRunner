@@ -1,13 +1,14 @@
 # Warwick's Quiz Runner
 Hey, it's me, Warwick! I got bored standing by my stable in Avalon watching you save the spiral, so I thought I would help out!
-
-<img width="467" height="248" alt="Image" src="https://github.com/user-attachments/assets/5c0e49c1-804f-4ec2-b9aa-99f88d65c207" />
+<p align="center">
+ <img width="467" height="248" alt="Image" src="https://github.com/user-attachments/assets/5c0e49c1-804f-4ec2-b9aa-99f88d65c207" />
+</p>
 
 ## What is Warwick's Quiz Runner?
-Warwick's Quiz Runner is a python application designed to automatically complete 10 quizzes on the Wizard101 trivia page and earn 100 crowns.
+Warwick's Quiz Runner is a python application designed to automatically complete 10 quizzes on the Wizard101 trivia page and earn 100 crowns daily.
 
 ## Will this get me banned?
-This program is against the Wizard101 TOS, however I have not heard of anyone getting banned because of it, so use at your own risk.
+This program is against the Wizard101 ToS, however I have not heard of anyone getting banned because of it, so use at your own risk.
 
 ## How do I download & use?
 NOTE: REQUIRES CHROMIUM BROWSER (Ideally Google Chrome)
@@ -25,7 +26,7 @@ If you are still conerned, I encourage you to read through the source code (It's
 
 ```python -m PyInstaller QuizRunner.py --onedir --icon="ICON_PATH_HERE\Warwick32x32.ico" --windowed```
 
-replace the icon argument with your path, or omit the argument entirely if you don't care.
+Replace the icon argument with your path, or omit the argument entirely if you don't care.
 
 ## I want to contact you regarding a question or bug, how can I do that?
 Shoot me a message on Discord (@doggyshot), X/Twitter (@NasusOTP), or open an issue on Github. I try to respond when I'm available. 
