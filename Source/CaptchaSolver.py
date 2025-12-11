@@ -9,7 +9,10 @@ def SolveWizCaptcha(driver):
         BASE_DIR = os.path.dirname(__file__)
 
         
-        jframe = driver.get_frame("@id=jPopFrame_content", timeout=2)
+        if driver.ele("@id=jPopFrame_content", timeout=2):
+            jframe = driver.get_frame("@id=jPopFrame_content")
+        else:
+            return
 
         iframe2 = jframe.get_frame("@title=recaptcha challenge expires in two minutes", timeout=1)
         if iframe2:
@@ -32,5 +35,6 @@ def SolveWizCaptcha(driver):
             iframe2.ele("#audio-response").input(Keys.ENTER)
         else:
             print("no captcha, hooray.")
-    except:
+    except Exception as e:
         print("something went wrong, lol.")
+        print(e)
