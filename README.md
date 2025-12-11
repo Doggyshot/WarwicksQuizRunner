@@ -24,7 +24,7 @@ No, your login credentials are only stored locally in the Config.json file so yo
 
 If you are still conerned, I encourage you to read through the source code (It's not very long, I promise) and compile the program yourself with the following command:
 
-```python -m PyInstaller QuizRunner.py --onedir --icon="ICON_PATH_HERE\Warwick32x32.ico" --windowed```
+```python -m PyInstaller QuizRunner.py --onedir --icon="ICON_PATH_HERE\bin\Warwick32x32.ico" --windowed```
 
 Replace the icon argument with your path, or omit the argument entirely if you don't care.
 
