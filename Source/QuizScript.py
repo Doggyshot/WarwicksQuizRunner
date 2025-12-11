@@ -2,11 +2,15 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
     from DrissionPage import ChromiumPage, ChromiumOptions, Chromium # type: ignore
     import time
     import random
+
     def importCaptchaSolver():
         try:
             import CaptchaSolver
+            return CaptchaSolver
         except:
             print("lite version, captcha solver not included")
+            return None
+
     importCaptchaSolver()
 
     try:
@@ -93,6 +97,7 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             time.sleep(2)
             driver.run_js("document.querySelector('#jPopFrame_content').contentDocument.querySelector('#submit').click();")
             time.sleep(0.5)
+            CaptchaSolver = importCaptchaSolver()
             if CaptchaSolver:
                 statusText.set("Solving Captcha")
                 CaptchaSolver.SolveWizCaptcha(driver)
