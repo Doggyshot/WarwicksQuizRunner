@@ -847,72 +847,6 @@
             "a state of perplexity or uncertainty"
         ]
     ],
-    "English Punctuation": [
-        [
-            "A period is also used to __________ words.",
-            "Abbreviate"
-        ],
-        [
-            "A semi-colon is primarily used to:",
-            "Join two connected sentences"
-        ],
-        [
-            "An exclamation mark is often used to express what?",
-            "Excitement"
-        ],
-        [
-            "Three periods in a row are called _________.",
-            "Ellipses"
-        ],
-        [
-            "Where does the period go in a sentence?",
-            "At the end"
-        ],
-        [
-            "Which of the following is NOT a reason to use an exclamation mark (!) ?",
-            "Boredom"
-        ],
-        [
-            "Which sentence below uses a comma correctly?",
-            "Before you begin, let us learn to play."
-        ],
-        [
-            "Which sentence below uses a comma correctly?",
-            "I love to play video games, but they are hard."
-        ],
-        [
-            "Which sentence below uses a comma(s) correctly?",
-            "Megan, who lives next door, loves dogs."
-        ],
-        [
-            "Which sentence correctly uses an apostrophe?",
-            "The horse's tail is so pretty."
-        ],
-        [
-            "Which sentence correctly uses an apostrophe?",
-            "I can't do it, because it is too hard."
-        ],
-        [
-            "Which sentence uses a semi-colon correctly?",
-            "I set out on a quest; the enemies looked fierce."
-        ],
-        [
-            "Which sentence uses quotation marks correctly?",
-            "Sally said, \"It's time to cook dinner.\""
-        ],
-        [
-            "Which date below uses a comma correctly?",
-            "January 1st, 2014"
-        ],
-        [
-            "Quotation marks are used to do what?",
-            "Show speech"
-        ],
-        [
-            "What is the apostrophe's main function?",
-            "Show ownership or posession"
-        ]
-    ],
     "Greek Mythology": [
         [
             "Which Greek god is the god of fertility and wine?",
@@ -1482,11 +1416,11 @@
         ],
         [
             "Who's most likely to fight you over some Grape Juice?",
-            "Ettin"
+            "Satyrs"
         ],
         [
             "What creature can't you find in Knossos?",
-            "Statue"
+            "Ettin"
         ],
         [
             "How much copper do you collect from Ophidians in Illios for Lycurgus?",
@@ -1629,6 +1563,10 @@
         [
             "What is the name of the Witchdoctor Trainer?",
             "Vadima"
+        ],
+        [
+            "How many pieces are there of Marco Pollo's map?",
+            "7"
         ]
     ],
     "Pirate101 Goldseeker": [
