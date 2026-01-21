@@ -11,8 +11,6 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             print("lite version, captcha solver not included")
             return None
 
-    importCaptchaSolver()
-
     try:
         options = ChromiumOptions()     
         options.set_argument("--profile-directory=Default")
@@ -48,6 +46,8 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
                     return
                 else:
                     answerCount += 1
+            page.eles(".largecheckbox")[1].click() # if correct answer isn't found, just pick the first option to avoid hanging
+            page.ele("#nextQuestion").click()
             return
             
 
@@ -62,6 +62,10 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
 
         time.sleep(0.25)
         driver.ele(".override width100").click()
+        CaptchaSolver = importCaptchaSolver()
+        if CaptchaSolver:
+            statusText.set("Solving Captcha")
+            CaptchaSolver.SolveWizCaptcha(driver)
 
         time.sleep(1)
         statusText.set("Starting quizzes...")
@@ -101,6 +105,7 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             if CaptchaSolver:
                 statusText.set("Solving Captcha")
                 CaptchaSolver.SolveWizCaptcha(driver)
+            time.sleep(1)
             creditsEarnedInSession.set(creditsEarnedInSession.get()+10)
             statusText.set("Results confirmed!")
             print("Quiz " + str(count) + " done.")
