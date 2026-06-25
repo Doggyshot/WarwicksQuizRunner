@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Chrome data (gets created and cleared during session.)
+bin/temp-user-data-path/
+
 # C extensions
 *.so
 

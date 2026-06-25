@@ -1,20 +1,32 @@
 def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession):
     from DrissionPage import ChromiumPage, ChromiumOptions, Chromium # type: ignore
-    import time
-    import random
+    from DrissionPage.errors import PageDisconnectedError
+    import time, random, sys, os, shutil
 
-    def importCaptchaSolver():
-        try:
-            import CaptchaSolver
-            return CaptchaSolver
-        except:
-            print("lite version, captcha solver not included")
-            return None
+    def clearUserDataPath():
+        userDataPath = getMainPath("bin\\temp-user-data-path") # clear out user data path 
+        shutil.rmtree(userDataPath)
+        os.makedirs(userDataPath)
+
+    def getMainPath(relativePath):
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            return os.path.dirname(sys.executable)+"\\"+relativePath
+        else:
+            return os.path.dirname(__file__)+"\\"+relativePath
+        
+    try:
+        import CaptchaSolver
+        print("CaptchaSolver imported")
+    except:
+        print("lite version, captcha solver not included")
 
     try:
         options = ChromiumOptions()     
         options.set_argument("--profile-directory=Default")
         options.incognito(True)
+        options.set_browser_path(getMainPath("bin\\chrome-win64\\chrome.exe")) # Chrome version 135
+        options.set_user_data_path(getMainPath("bin\\temp-user-data-path"))  # Temp data folder for said version
+
         
         def getCorrectAnswerBox(page, quizName):
             questionElementText = page.ele(".quizQuestion").text
@@ -52,6 +64,9 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             
 
         driver = ChromiumPage(addr_or_opts=options)
+        print(driver.browser.version)
+        driver.get("https://www.wizard101.com/game")
+        time.sleep(1)
         driver.get("https://www.wizard101.com/game")
 
         statusText.set("Logging into Wizard101 website")
@@ -62,10 +77,17 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
 
         time.sleep(0.25)
         driver.ele(".override width100").click()
-        CaptchaSolver = importCaptchaSolver()
-        if CaptchaSolver:
-            statusText.set("Solving Captcha")
-            CaptchaSolver.SolveWizCaptcha(driver)
+
+        time.sleep(1)
+        captchaResult = CaptchaSolver.SolveWizCaptcha(driver, True)
+        if captchaResult == "CaptchaUncompleted":
+            statusText.set("Captcha unsuccessful, please finish login manually.")
+            loginSuccessful = False
+            while not loginSuccessful: # loop check for the login button until its gone (successful login)
+                loginButton = driver.ele(".override width100", timeout= 1.0)
+                if loginButton:
+                    continue
+                loginSuccessful = True
 
         time.sleep(1)
         statusText.set("Starting quizzes...")
@@ -84,27 +106,34 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             statusText.set("Completing "+quiznames[count].replace("-", " ")+" quiz ("+str(count+1)+" of 10)")
             
             while True:
-                if driver.ele(".quizQuestion", timeout=1):
+                if driver.ele(".quizQuestion", timeout=1.0):
                     getCorrectAnswerBox(driver, quiznames[count])
                     time.sleep(0.5)
                 else:
                     break
-            if driver.ele(".quizThrottle", timeout=1): # quiz already done / all quizzes done already
+            if driver.ele(".quizThrottle", timeout=1.0): # quiz already done / all quizzes done already
                 statusText.set("Quiz already completed, skipping.")
                 count += 1
                 time.sleep(1)
                 continue
             print("done")
             statusText.set("Quiz finished, confirming results.")
-            driver.wait.ele_displayed(".kiaccountsbuttongreen", timeout=10)
-            driver.ele(".kiaccountsbuttongreen").click(timeout=10)
+            driver.wait.ele_displayed(".kiaccountsbuttongreen", timeout=10.0)
+            driver.ele(".kiaccountsbuttongreen").click(timeout=10.0)
             time.sleep(2)
             driver.run_js("document.querySelector('#jPopFrame_content').contentDocument.querySelector('#submit').click();")
             time.sleep(0.5)
-            CaptchaSolver = importCaptchaSolver()
             if CaptchaSolver:
                 statusText.set("Solving Captcha")
-                CaptchaSolver.SolveWizCaptcha(driver)
+                captchaResult = CaptchaSolver.SolveWizCaptcha(driver, False)
+            if not CaptchaSolver or captchaResult == "CaptchaUncompleted":
+                statusText.set("Captcha unsuccessful, please finish captcha manually.")
+                quizSuccessful = False
+                while not quizSuccessful: # loop check for the "see your score" button until its gone (quiz registered)
+                    blueButtons = driver.eles(".kiaccountsbuttonblue", timeout= 1.0)
+                    if len(blueButtons) == 2: # check if blue score button disappears (Another unrelated invisible blue button exists on the page)
+                        continue
+                    quizSuccessful = True
             time.sleep(1)
             creditsEarnedInSession.set(creditsEarnedInSession.get()+10)
             statusText.set("Results confirmed!")
@@ -113,21 +142,24 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
         
         statusText.set("Quizzes completed!")
         driver.close()
+        clearUserDataPath()
 
         count = 5
         while (count >= 0):
             time.sleep(1)
             statusText.set("Quizzes completed! (Closing menu in "+str(count)+")")
             count -= 1
+    except PageDisconnectedError: # chrome tab was closed
+        clearUserDataPath()
+        statusText.set("Quiz page closed, please restart quiz runner.")
+        time.sleep(10)
+        statusText.set("Quizzes completed! (Closing menu in 0)") # Will close the maingui, just being lazy and reusing close method.
+    
     except Exception as e:
-        if {type(e).__name__} == {'PageDisconnectedError'}:
-            statusText.set("Quiz page closed, please restart quiz runner.")
-            time.sleep(10)
-            statusText.set("Quizzes completed! (Closing menu in 0)") # Will close the maingui, just being lazy and reusing close method.
-        else:
-            while True:
-                statusText.set("Exception: "+str({type(e).__name__}))
-                print(e)
-                time.sleep(3)
-                statusText.set("If you see this, please contact @doggyshot!") # please do, I will try my best respond and fix. :)
-                time.sleep(3)
+        clearUserDataPath()
+        while True:
+            statusText.set("Exception: "+str({type(e).__name__}))
+            print(e)
+            time.sleep(3)
+            statusText.set("If you see this, please contact @doggyshot!") # please do, I will try my best respond and fix. :)
+            time.sleep(3)

@@ -1,11 +1,6 @@
 import tkinter
 from tkinter import messagebox
-import json
-import threading
-import sys
-import os
-import time
-import math
+import json, threading, sys, os, time, math, shutil
 import QuizScript
 
 def getMainPath(relativePath):
@@ -116,7 +111,7 @@ def openRunningMenu():
 
     RunningGUI.after(0, repeatDots)
 
-    statusText.trace("w", closeSuccessfulRun)
+    statusText.trace_add("write", closeSuccessfulRun)
 
     def updateTitleCreditCount(a, b, c):
         RunningGUI.title("Running Quizzes (Credits earned: "+str(creditsEarnedInSession.get())+")")
@@ -125,8 +120,8 @@ def openRunningMenu():
         global currentQuizCooldown
         currentQuizCooldown = math.floor(time.time())+QUIZ_COOLDOWN
 
-    creditsEarnedInSession.trace("w", updateTitleCreditCount)
-    creditsEarnedInSession.trace("w", updateNextQuizRunTime)
+    creditsEarnedInSession.trace_add("write", updateTitleCreditCount)
+    creditsEarnedInSession.trace_add("write", updateNextQuizRunTime)
     
     with open(BIN_FOLDER+r"\answers.json", "r") as f:
         answerKey = json.load(f)
