@@ -14,9 +14,14 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
         else:
             return os.path.dirname(__file__)+"\\"+relativePath
         
+    os.makedirs(getMainPath("bin\\temp-user-data-path"), exist_ok=True) # just in case it didn't get created
+    
+
+    RunningLite = True
     try:
         import CaptchaSolver
         print("CaptchaSolver imported")
+        RunningLite = False
     except:
         print("lite version, captcha solver not included")
 
@@ -79,8 +84,9 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
         driver.ele(".override width100").click()
 
         time.sleep(1)
-        captchaResult = CaptchaSolver.SolveWizCaptcha(driver, True)
-        if captchaResult == "CaptchaUncompleted":
+        if not RunningLite:
+            captchaResult = CaptchaSolver.SolveWizCaptcha(driver, True)
+        if RunningLite or captchaResult == "CaptchaUncompleted":
             statusText.set("Captcha unsuccessful, please finish login manually.")
             loginSuccessful = False
             while not loginSuccessful: # loop check for the login button until its gone (successful login)
@@ -123,10 +129,10 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
             time.sleep(2)
             driver.run_js("document.querySelector('#jPopFrame_content').contentDocument.querySelector('#submit').click();")
             time.sleep(0.5)
-            if CaptchaSolver:
+            if not RunningLite:
                 statusText.set("Solving Captcha")
                 captchaResult = CaptchaSolver.SolveWizCaptcha(driver, False)
-            if not CaptchaSolver or captchaResult == "CaptchaUncompleted":
+            if RunningLite or captchaResult == "CaptchaUncompleted":
                 statusText.set("Captcha unsuccessful, please finish captcha manually.")
                 quizSuccessful = False
                 while not quizSuccessful: # loop check for the "see your score" button until its gone (quiz registered)
