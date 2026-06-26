@@ -148,6 +148,7 @@ def runQuizzes(userName, passWord, answerKey, statusText, creditsEarnedInSession
         
         statusText.set("Quizzes completed!")
         driver.close()
+        time.sleep(1)
         clearUserDataPath()
 
         count = 5
